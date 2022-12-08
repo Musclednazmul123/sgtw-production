@@ -1,0 +1,28 @@
+<script src="{{ 'jquery-slider.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'upsell-main.js' | asset_url }}" defer="defer"></script>      
+<link rel="stylesheet" href="{{ 'upsell-main.css' | asset_url }}">
+
+<script>
+  window.UpsellLiquid = window.UpsellLiquid || {};
+  UpsellLiquid.shopInfo = {
+    secure_url: {{ shop.secure_url | json }},
+    shop: {{ shop.permanent_domain | json }},
+    domain: {{ shop.domain | json }},
+    currency: {{ shop.currency | json }},
+    money_format: {{ shop.money_format |json }},
+    money_with_currency_format: {{ shop.money_with_currency_format | json }}
+  };
+
+  UpsellLiquid.product_id = {{ product.id | json }};
+  UpsellLiquid.product_handle = {{ product.handle | json }};
+  product_tags = {{ product.tags | json }};
+  UpsellLiquid.api_key = "test_key";
+  UpsellLiquid.template = `{{ template.name }}`;
+  UpsellLiquid.routes = {
+    cart_add_url: '{{ routes.cart_add_url }}',
+    cart_change_url: '{{ routes.cart_change_url }}',
+    cart_update_url: '{{ routes.cart_update_url }}',
+    predictive_search_url: '{{ routes.predictive_search_url }}'
+  };
+  UpsellLiquid.CartItems = {{ cart.items | json }};
+</script>

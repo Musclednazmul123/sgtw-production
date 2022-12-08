@@ -1,0 +1,356 @@
+frequently-bought-together.liquid<style>
+  :root{
+    --frequently_heading_size: {{ section.settings.heading_font_size }}px;
+    --frequently_heading_position: {{ section.settings.heading_position }};
+    --frequently_product_title_size: {{ section.settings.product_font_size }}px;
+    --frequently_vendor_font_size: {{ section.settings.vendor_font_size }}px;
+    --frequently_price_font_size: {{ section.settings.price_font_size }}px;
+/*     --columns_desktop: {{section.settings.columns_desktop}}; */
+    --frequently_heading_font_color: {{section.settings.heading_font_color}};
+    --frequently_product_color: {{section.settings.product_color}};
+    --frequently_vendor_color: {{section.settings.vendor_color}};
+    --frequently_price_color: {{section.settings.price_color}};
+    --frequently_compare_price_color: {{section.settings.compare_price_color}};
+    --frequently_sale_price_color: {{section.settings.sale_price_color}};
+    --frequently_sale_bg_color: {{section.settings.sale_bg_color}};
+    --frequently_sale_fg_color: {{section.settings.sale_fg_color}};
+
+    --frequently_subtotal_text_font_color: {{section.settings.subtotal_text_font_color}};
+    --frequently_subtotal_text_font_size: {{section.settings.subtotal_text_font_size}}px;
+    
+    --frequently_subtotal_font_color: {{section.settings.subtotal_font_color}};
+    --frequently_subtotal_font_size: {{section.settings.subtotal_font_size}}px;
+
+    --frequently_subtotal_btn_font_color: {{section.settings.subtotal_btn_font_color}};
+    --frequently_subtotal_btn_background_color: {{section.settings.subtotal_background_color}};
+    --frequently_subtotal_btn_font_size: {{section.settings.subtotal_btn_font_size}}px;
+  }
+</style>
+  
+{%  if section.settings.show_modal and template contains 'cart' %}
+<div id="myModal" class="modal">
+  <div class="modal-content">
+      <span class="close">&times;</span>
+      <div class="isf-frequently-bought-container isf-desktop-view">
+          <h2 class="isf-frequently-bought-title translatable">
+              {{ section.settings.heading }}
+          </h2>
+          <div class="isf-frequently-bought-recommendations-container">
+              <ul class="isf-frequently-bought-products" aria-hidden="true">
+  
+              </ul>
+              <div class="isf-frequently-bought-form">
+                  <div class="isf-frequently-bought-total-price-box">
+                      <span class="isf-frequently-bought-total-price-text translatable">{{ section.settings.subtotal_text }}</span>
+                      <span class="isf-frequently-bought-total-price-sale-price">
+                          <span class="money"></span>
+                      </span>
+                  </div>
+                  <button class="isf-frequently-bought-add-button">
+                      Add selected to cart
+                  </button>
+              </div>
+          </div>
+          <ul class="isf-frequently-bought-selector-list"></ul>
+      </div>
+  </div>
+</div>
+{% else %}
+  <div class="upsell-main-block" style="display: none;">
+    <div class="isf-frequently-bought-container isf-desktop-view">
+        <h2 class="isf-frequently-bought-title translatable">
+            {{ section.settings.heading }}
+        </h2>
+        <div class="isf-frequently-bought-recommendations-container">
+            <ul class="isf-frequently-bought-products" aria-hidden="true">
+                
+            </ul>
+            <div class="isf-frequently-bought-form">
+            <div class="isf-frequently-bought-total-price-box">
+                <span class="isf-frequently-bought-total-price-text translatable">{{ section.settings.subtotal_text }}</span>
+                <span class="isf-frequently-bought-total-price-sale-price">
+                <span class="money"></span>
+                </span>
+            </div>
+            <button class="isf-frequently-bought-add-button">
+                Add selected to cart
+            </button>
+            </div>
+        </div>  
+        <ul class="isf-frequently-bought-selector-list"></ul>
+    </div>
+<div>
+{% endif %}
+<script>
+    window.UpsellLiquid = window.UpsellLiquid || {};
+    UpsellLiquid.upsell_frequently = [];
+    {% for key in shop.metafields.upsell_frequently %}
+    {% assign l = key | first %}
+      UpsellLiquid.upsell_frequently.push({{ shop.metafields.upsell_frequently[l].value | json }});
+    {% endfor %}
+    UpsellLiquid.frequently_modal = {{ section.settings.show_modal }}
+</script>
+
+{% schema %}
+{
+    "name": "Frequently Bought",
+    "templates": ["product","cart"],
+    "settings": [
+    {
+        "type": "text",
+        "id": "heading",
+        "default": "Frequently bought together",
+        "label": "Heading"
+    },
+    {
+        "type": "text",
+        "id": "subtotal_text",
+        "default": "Total Price",
+        "label": "Subtotal text"
+    },
+    {
+        "type": "select",
+        "id": "heading_position",
+        "options": [
+            {
+                "value": "left",
+                "label": "Left"
+            },
+            {
+                "value": "center",
+                "label": "Center"
+            },
+            {
+                "value": "right",
+                "label": "Right"
+            }
+        ],
+        "default": "center",
+        "label": "Heading position"
+    },
+    {
+        "type": "range",
+        "id": "heading_font_size",
+        "min": 8,
+        "max": 48,
+        "step": 1,
+        "default": 26,
+        "label": "Heading font size"
+    },
+    {
+        "type": "range",
+        "id": "subtotal_btn_font_size",
+        "min": 8,
+        "max": 48,
+        "step": 1,
+        "default": 26,
+        "label": "Subtotal Button font size"
+    },
+    {
+        "type": "range",
+        "id": "subtotal_text_font_size",
+        "min": 8,
+        "max": 48,
+        "step": 1,
+        "default": 26,
+        "label": "Subtotal Text font size"
+    },
+    {
+        "type": "range",
+        "id": "subtotal_font_size",
+        "min": 8,
+        "max": 48,
+        "step": 1,
+        "default": 26,
+        "label": "Subtotal Price font size"
+    },
+    {
+        "type": "range",
+        "id": "product_font_size",
+        "min": 8,
+        "max": 48,
+        "step": 1,
+        "default": 18,
+        "label": "Product title font size"
+    },
+    {
+        "type": "range",
+        "id": "vendor_font_size",
+        "min": 8,
+        "max": 48,
+        "step": 1,
+        "default": 12,
+        "label": "Vendor font size"
+    },
+    {
+        "type": "range",
+        "id": "price_font_size",
+        "min": 8,
+        "max": 48,
+        "step": 1,
+        "default": 16,
+        "label": "Price font size"
+    },
+    {
+        "type": "range",
+        "id": "columns_desktop",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "default": 4,
+        "label": "Number of columns on desktop"
+    },
+    {
+        "type": "select",
+        "id": "columns_mobile",
+        "options": [
+            {
+                "value": "1",
+                "label": "1"
+            },
+            {
+                "value": "2",
+                "label": "2"
+            }
+        ],
+        "default": "2",
+        "label": "Number of columns on mobile"
+    },
+    {
+        "type": "header",
+        "content": "PRODUCT CARD"
+    },
+    { 
+        "type": "checkbox",
+        "id": "show_modal",
+        "default": false,
+        "label": "Show Pop-up Modal on Cart Page"
+    },
+    {
+        "type": "checkbox",
+        "id": "show_secondary_image",
+        "default": false,
+        "label": "Show second image on hover"
+    },
+    {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "default": false,
+        "label": "Show vendor"
+    },
+    {
+        "type": "checkbox",
+        "id": "show_price",
+        "default": true,
+        "label": "Show product price"
+    },
+    {
+        "type": "checkbox",
+        "id": "show_sale_label",
+        "default": true,
+        "label": "Show sale label"
+    },
+    {
+        "type": "text",
+        "id": "sale_label_text",
+        "default": "Sale",
+        "label": "Sale badge label",
+        "info": "Format: Sale | Sale {percent}% | Sale {amount}"
+    },
+    {
+        "type": "range",
+        "id": "sale_br_radius",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "default": 50,
+        "label": "Sale badge border radius"
+    },
+    {
+        "type": "header",
+        "content": "COLORS"
+    },
+    {
+        "type": "color",
+        "id": "heading_font_color",
+        "default": "#334FB4",
+        "label": "Heading Color"
+    },
+    {
+        "type": "color",
+        "id": "subtotal_btn_font_color",
+        "default": "#334FB4",
+        "label": "Button Font Color"
+    },
+    {
+        "type": "color",
+        "id": "subtotal_text_font_color",
+        "default": "#334FB4",
+        "label": "Subtotal Text Color"
+    },
+    {
+        "type": "color",
+        "id": "subtotal_font_color",
+        "default": "#334FB4",
+        "label": "Subtotal Button Text Color"
+    },
+    {
+        "type": "color",
+        "id": "subtotal_background_color",
+        "default": "#334FB4",
+        "label": "Subtotal Background Color"
+    },
+    {
+        "type": "color",
+        "id": "product_color",
+        "default": "#000000",
+        "label": "Product Title Color"
+    },
+    {
+        "type": "color",
+        "id": "vendor_color",
+        "default": "#000000",
+        "label": "Vendor Color"
+    },
+    {
+        "type": "color",
+        "id": "price_color",
+        "default": "#000000",
+        "label": "Price Color"
+    },
+    {
+        "type": "color",
+        "id": "compare_price_color",
+        "default": "#B52D2D",
+        "label": "Compare At Price Color"
+    },
+    {
+        "type": "color",
+        "id": "sale_bg_color",
+        "default": "#B52D2D",
+        "label": "Sale Badge Background"
+    },
+    {
+        "type": "color",
+        "id": "sale_fg_color",
+        "default": "#ffffff",
+        "label": "Sale Badge Foreground"
+    },
+    {
+        "type": "header",
+        "content": "ADDITIONAL STYLE"
+    },
+    {
+        "type": "textarea",
+        "id": "custom_css",
+        "label": "Additional CSS Code"
+    }
+    ],
+    "presets": [
+    {
+    "name": "FREQUENTLY_BOUGHT",
+    "category": "Custom"
+    }
+    ]
+}
+{% endschema %}

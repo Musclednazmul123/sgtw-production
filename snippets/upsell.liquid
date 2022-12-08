@@ -1,0 +1,152 @@
+
+{% capture upsell_html %}
+<div class="upsell_wrapper">
+<div class="upsell_header">
+  <h2>Select Addons</h2>
+</div>
+<div class="upsell_contents">
+  <ul class="upsell_products"></ul>
+</div>
+</div>
+{% endcapture %}
+
+{% capture frequently_html %}
+<div class="isf-frequently-bought-container isf-desktop-view">
+  <h2 class="isf-frequently-bought-title translatable">
+    Frequently Bought Together
+  </h2>
+  <div class="isf-frequently-bought-recommendations-container">
+    <ul class="isf-frequently-bought-products" aria-hidden="true">
+		
+    </ul>
+    <div class="isf-frequently-bought-form">
+      <div class="isf-frequently-bought-total-price-box">
+        <span class="isf-frequently-bought-total-price-text translatable">Total price:</span>
+        <span class="isf-frequently-bought-total-price-sale-price">
+          <span class="money"></span>
+        </span>
+      </div>
+      <button class="isf-frequently-bought-add-button">
+        Add selected to cart
+      </button>
+    </div>
+  </div>  
+  <ul class="isf-frequently-bought-selector-list">
+    
+  </ul>
+</div>
+{% endcapture %}
+
+{% capture recently_html %}
+<div class="recently_wrapper"style=" margin: 44px; ">
+<div class="recently_header">
+  <h2>Recently Viewed Products</h2>
+</div>
+<div class="recently_contents">
+  <ul class="recently_products"></ul>
+</div>
+</div>
+{% endcapture %}
+{{ 'jquery-slider.js' | asset_url | script_tag }}
+{{ 'upsell.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'upsell.js' | asset_url }}" defer="defer"></script>
+<script>
+  /**
+    * Global scoped variable that hold shop, product information from liquid
+    * Additionally you can create this variable in theme.liquid file.
+    * This object is required
+  **/
+  window.UpsellLiquid = window.UpsellLiquid || {};
+
+  UpsellLiquid.shopInfo = {
+    secure_url: `{{ shop.secure_url }}`,
+    shop: `{{ shop.permanent_domain }}`,
+    domain: `{{ shop.domain }}`,
+    currency: `{{ shop.currency }}`,
+    money_format: `{{ shop.money_format }}`,
+    money_with_currency_format: `{{ shop.money_with_currency_format }}`
+  };
+
+  /**
+    * Product id will be used to fetch data from API.
+    * Store current product id on product template
+  **/
+  UpsellLiquid.product_id = `{{ product.id }}`;
+  UpsellLiquid.product_handle = `{{ product.handle }}`;
+
+  product_tags = `{{ product.tags | json }}`;
+
+  UpsellLiquid.product_tags = JSON.parse(product_tags);
+  
+  /**
+    * Unique id (Optional) for this shop to send request to API
+  **/
+  UpsellLiquid.api_key = "test_key";
+
+  UpsellLiquid.template = `{{ template.name }}`;
+
+  UpsellLiquid.routes = {
+    cart_add_url: '{{ routes.cart_add_url }}',
+    cart_change_url: '{{ routes.cart_change_url }}',
+    cart_update_url: '{{ routes.cart_update_url }}',
+    predictive_search_url: '{{ routes.predictive_search_url }}'
+  };
+     
+  UpsellLiquid.CartItems = {{ cart.items | json }};
+  
+//   OFFERS
+  
+  UpsellLiquid.Offers = [];
+  
+  
+  {% for key in shop.metafields.upsell_ui %}
+  {% assign l = key | first %}
+    UpsellLiquid.Offers.push({{ shop.metafields.upsell_ui[l].value | json }});
+  {% endfor %}
+
+  UpsellLiquid.upsell_template_selector = '.product-form';
+  UpsellLiquid.upsell_html = {{ upsell_html | strip_newlines | json }}
+  
+//   FREQUENTLY 
+  
+  UpsellLiquid.upsell_frequently = [];
+  
+  {% for key in shop.metafields.upsell_frequently %}
+  {% assign l = key | first %}
+    UpsellLiquid.upsell_frequently.push({{ shop.metafields.upsell_frequently[l].value | json }});
+  {% endfor %} 
+
+  UpsellLiquid.frequently_template_selector = '.product-form,.cart__footer';
+  UpsellLiquid.frequently_html = {{ frequently_html | strip_newlines | json }}
+  
+//   Recommendations
+  
+  UpsellLiquid.upsell_recommendations = [];
+   
+  {% for key in shop.metafields.upsell_recommendations %}
+  {% assign l = key | first %}
+    UpsellLiquid.upsell_recommendations.push({{ shop.metafields.upsell_recommendations[l].value | json }});
+  {% endfor %}
+
+//   Recently
+
+  UpsellLiquid.upsell_recently = [];
+
+  {% for key in shop.metafields.upsell_recently %}
+  {% assign l = key | first %}
+    UpsellLiquid.upsell_recently.push({{ shop.metafields.upsell_recently[l].value | json }});
+  {% endfor %}
+
+  var recently_selector = $SH('main');
+  if(recently_selector.length > 0){
+    UpsellLiquid.recently_template_selector = 'main';
+  }
+  else{
+    UpsellLiquid.recently_template_selector = 'footer.footer';
+  }
+  UpsellLiquid.recently_html = {{ recently_html | strip_newlines | json }}
+
+
+</script>
+    
+ 

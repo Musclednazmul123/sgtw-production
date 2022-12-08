@@ -1,0 +1,22 @@
+[
+    {
+        "label": "Same Collection Type",
+        "type": "collection",
+        "active": false
+    },
+    {
+        "label": "Same Product Type",
+        "type": "product",
+        "active": false
+    },
+    {
+        "label": "Same Vendor",
+        "type": "vendor",
+        "active": false
+    },
+    {
+        "label": "Same Tags",
+        "type": "tag",
+        "active": false
+    }
+]

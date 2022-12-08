@@ -1,0 +1,253 @@
+recently-viewed.liquid<style>
+  :root{
+    --recently_heading_size: {{ section.settings.heading_font_size }}px;
+    --recently_heading_position: {{ section.settings.heading_position }};
+    --recently_product_title_size: {{ section.settings.product_font_size }}px;
+    --recently_vendor_font_size: {{ section.settings.vendor_font_size }}px;
+    --recently_price_font_size: {{ section.settings.price_font_size }}px;
+/*     --columns_desktop: {{section.settings.columns_desktop}}; */
+    --recently_heading_font_color: {{section.settings.heading_font_color}};
+    --recently_product_color: {{section.settings.product_color}};
+    --recently_vendor_color: {{section.settings.vendor_color}};
+    --recently_price_color: {{section.settings.price_color}};
+    --recently_compare_price_color: {{section.settings.compare_price_color}};
+    --recently_sale_price_color: {{section.settings.sale_price_color}};
+
+    --recently_add_cart_text_color: {{section.settings.add_cart_text_color}};
+    --recently_add_cart_text_size: {{section.settings.add_cart_font_size}};
+    --recently_add_cart_background_color: {{section.settings.add_cart_background_color}};
+    
+    --recently_sale_bg_color: {{section.settings.sale_bg_color}};
+    --recently_sale_fg_color: {{section.settings.sale_fg_color}};
+  } 
+</style>
+<div class="upsell-main-block" style="display: none;">
+    <div class="recently_wrapper" style="margin: 44px;">
+        <div class="recently_header">
+            <h2>{{ section.settings.heading }}</h2>
+        </div>
+        <div class="recently_contents">
+            <ul class="recently_products" recently-desktop-column= "{{ section.settings.columns_desktop }}" recently-mobile-column= "{{ section.settings.columns_mobile }}"></ul>
+        </div>
+    </div>
+</div>
+<script>
+    window.UpsellLiquid = window.UpsellLiquid || {};
+    UpsellLiquid.upsell_recently = [];
+    {% for key in shop.metafields.upsell_recently %}
+    {% assign l = key | first %}
+      UpsellLiquid.upsell_recently.push({{ shop.metafields.upsell_recently[l].value | json }});
+    {% endfor %}
+    UpsellLiquid.recently_columns_desktop = {{ section.settings.columns_desktop }}
+    UpsellLiquid.recently_columns_mobile = {{ section.settings.columns_mobile }}
+</script>
+
+{% schema %}
+{
+    "name": "Recently Viewed",
+    "templates": ["product", "cart", "index", "collection", "page"],
+    "settings": [
+    {
+        "type": "text",
+        "id": "heading",
+        "default": "Recently viewed products",
+        "label": "Heading"
+    },
+    {
+        "type": "select",
+        "id": "heading_position",
+        "options": [
+            {
+                "value": "left",
+                "label": "Left"
+            },
+            {
+                "value": "center",
+                "label": "Center"
+            },
+            {
+                "value": "right",
+                "label": "Right"
+            }
+        ],
+        "default": "center",
+        "label": "Heading position"
+    },
+    {
+        "type": "range",
+        "id": "heading_font_size",
+        "min": 8,
+        "max": 48,
+        "step": 1,
+        "default": 26,
+        "label": "Heading font size"
+    },
+    {
+        "type": "range",
+        "id": "product_font_size",
+        "min": 8,
+        "max": 48,
+        "step": 1,
+        "default": 18,
+        "label": "Product title font size"
+    },
+    {
+        "type": "range",
+        "id": "vendor_font_size",
+        "min": 8,
+        "max": 48,
+        "step": 1,
+        "default": 12,
+        "label": "Vendor font size"
+    },
+    {
+        "type": "range",
+        "id": "price_font_size",
+        "min": 8,
+        "max": 48,
+        "step": 1,
+        "default": 16,
+        "label": "Price font size"
+    },
+    {
+        "type": "range",
+        "id": "add_cart_font_size",
+        "min": 8,
+        "max": 48,
+        "step": 1,
+        "default": 16,
+        "label": "Add to Cart Font Size"
+    },
+    {
+        "type": "range",
+        "id": "columns_desktop",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "default": 4,
+        "label": "Number of columns on desktop"
+    },
+    {
+        "type": "select",
+        "id": "columns_mobile",
+        "options": [
+            {
+                "value": "1",
+                "label": "1"
+            },
+            {
+                "value": "2",
+                "label": "2"
+            }
+        ],
+        "default": "2",
+        "label": "Number of columns on mobile"
+    },
+    {
+        "type": "header",
+        "content": "PRODUCT CARD"
+    },
+    {
+        "type": "checkbox",
+        "id": "show_secondary_image",
+        "default": false,
+        "label": "Show second image on hover"
+    },
+    {
+        "type": "checkbox",
+        "id": "show_sale_label",
+        "default": true,
+        "label": "Show sale label"
+    },
+    {
+        "type": "text",
+        "id": "sale_label_text",
+        "default": "Sale",
+        "label": "Sale badge label",
+        "info": "Format: Sale | Sale {percent}% | Sale {amount}"
+    },
+    {
+        "type": "range",
+        "id": "sale_br_radius",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "default": 50,
+        "label": "Sale badge border radius"
+    },
+    {
+        "type": "header",
+        "content": "COLORS"
+    },
+    {
+        "type": "color",
+        "id": "heading_font_color",
+        "default": "#334FB4",
+        "label": "Heading Color"
+    },
+    {
+        "type": "color",
+        "id": "product_color",
+        "default": "#000000",
+        "label": "Product Title Color"
+    },
+    {
+        "type": "color",
+        "id": "vendor_color",
+        "default": "#000000",
+        "label": "Vendor Color"
+    },
+    {
+        "type": "color",
+        "id": "price_color",
+        "default": "#000000",
+        "label": "Price Color"
+    },   
+    {
+        "type": "color",
+        "id": "add_cart_background_color",
+        "default": "#000000",
+        "label": "Add to Cart Background Color"
+    },
+    {
+        "type": "color",
+        "id": "compare_price_color",
+        "default": "#B52D2D",
+        "label": "Compare At Price Color"
+    },
+    {
+        "type": "color",
+        "id": "sale_bg_color",
+        "default": "#B52D2D",
+        "label": "Sale Badge Background"
+    },
+    {
+        "type": "color",
+        "id": "sale_fg_color",
+        "default": "#ffffff",
+        "label": "Sale Badge Foreground"
+    }, 
+    {
+        "type": "color",
+        "id": "add_cart_text_color",
+        "default": "#ffffff",
+        "label": "Add to Cart Text Color"
+    }, 
+    {
+        "type": "header",
+        "content": "ADDITIONAL STYLE"
+    },
+    {
+        "type": "textarea",
+        "id": "custom_css",
+        "label": "Additional CSS Code"
+    }
+    ],
+    "presets": [
+    {
+    "name": "RECENTLY_VIEWED",
+    "category": "Custom"
+    }
+    ]
+}
+{% endschema %}
